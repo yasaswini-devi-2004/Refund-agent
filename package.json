@@ -1,0 +1,26 @@
+{
+  "name": "ecommerce-refund-agent",
+  "version": "1.0.0",
+  "description": "An AI agent that handles e-commerce refund requests end-to-end: it looks up the customer and order in a mock CRM, checks the request against a strict, deterministic refund policy using tool calls, and approves or denies the refund with a stated reason — all visible live in an admin \"audit ledger\" dashboard.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.1.1",
+    "@mui/material": "^9.1.2",
+    "next": "^16.2.9",
+    "openai": "^6.44.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  }
+}

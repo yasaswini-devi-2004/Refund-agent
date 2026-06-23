@@ -1,0 +1,84 @@
+/* app/globals.css */
+
+:root {
+  /* Color tokens — "claims desk" palette */
+  --paper: #f6f1e7;
+  --paper-raised: #fffcf6;
+  --ink: #2a2420;
+  --ink-muted: #7c7066;
+  --line: #e2d6c4;
+
+  --terracotta: #c2562e;
+  --terracotta-dark: #a8431f;
+  --amber: #d99a3d;
+
+  --approved: #3e6b4f;
+  --approved-bg: #e7efe7;
+  --denied: #9a3b30;
+  --denied-bg: #f3e4e0;
+  --pending-bg: #faf0dc;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --shadow-card: 0 1px 2px rgba(42, 36, 32, 0.06), 0 4px 16px rgba(42, 36, 32, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+.mono {
+  font-family: var(--font-mono), monospace;
+}
+
+::selection {
+  background: var(--amber);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--terracotta);
+  outline-offset: 2px;
+}
+
+/* scrollbars, subtle */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
