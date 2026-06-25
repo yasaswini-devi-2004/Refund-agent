@@ -6,7 +6,7 @@ deterministic refund policy using tool calls, and approves or denies the
 refund with a stated reason — all visible live in an admin "audit ledger"
 dashboard.
 
-## 1. How it's built (read this before recording your walkthrough)
+## 1. How it's built 
 
 **Mock data**
 - `data/customers.js` — 15 customers, each with one order. The orders are
@@ -27,8 +27,7 @@ dashboard.
   - `get_customer_info`, `get_order_details`, `get_refund_policy` — read tools.
     The agent must call `get_customer_info` with an email the customer
     gives it in chat before it's allowed to call `check_eligibility` or
-    `finalize_decision` — identity is confirmed through conversation, not
-    a frontend login, and that confirmed email is remembered for the rest
+    `finalize_decision` — identity is confirmed through conversation,and that confirmed email is remembered for the rest
     of the session so the agent can't be tricked into discussing someone
     else's order.
   - `check_eligibility` — runs the actual policy logic deterministically
@@ -70,20 +69,25 @@ dashboard.
 ```bash
 npm install openai
 ```
-
+```command prompt
+npm init -y
+npm i 
+npm i next react react-dom openai
+```
 Create `.env.local` in the project root (see `.env.local.example`):
 
 ```
-OPENAI_API_KEY=sk-...
+OPENAI_API_KEY=gsk-...
 ```
 
 Then drop these files into your existing project at the same paths shown
 in this zip (they match the structure you already have: `data/`, `lib/`,
 `app/api/refund/route.js`, `app/dashboard/page.js`, etc.) and run:
 
-```bash
+```bash or command prompt
 npm run dev
 ```
+Before running npm run dev check in package.json if "dev":"next dev" is present in scripts
 
 Open two tabs: `http://localhost:3000` (customer chat) and
 `http://localhost:3000/dashboard` (audit ledger). Note: this project uses
@@ -95,72 +99,10 @@ you hit "module not found", confirm `jsconfig.json` has:
 { "compilerOptions": { "paths": { "@/*": ["./*"] } } }
 ```
 
-## 3. Demo script for your 7–10 minute video
+## 3. Used agent
+I have used the agent "openai/gpt-oss-20b" from groq website since the openai version gpt 4.0 mini requires money.
+The api key is also generated from the groq website
 
-This maps directly to the assignment's required deliverables.
-
-**A. Standard refund (approve) — ~1 min**
-Click the "Standard refund" sample chip (or type it yourself): *"Hi, I'm
-sneha.iyer@example.com. I'd like a refund for order ORD1003, I just don't
-want it anymore."* Switch to the dashboard tab — show the live tool calls
-(`get_customer_info` → `get_order_details` → `check_eligibility` →
-`finalize_decision`), the reasoning text on each, and the green
-**Approved** stamp with refund amount + refund ID.
-
-**B. Policy violation (deny) — ~1 min**
-Click "Non-refundable item": *"Hi, I'm karthik.s@example.com. Can I get a
-refund on my eBook order ORD1004?"* Show the agent denying it because
-digital goods are non-refundable, and the dashboard's red **Denied** stamp
-with the exact policy reason logged.
-
-**C. Edge case: failure/retry handling — ~1 min**
-Start a fresh conversation and type an order ID that doesn't exist before
-ever giving an email, e.g. *"Can you refund ORD9999?"* — show the agent
-declining to guess and asking for your email first (it can't call
-`check_eligibility` until `get_customer_info` has run), then the
-`tool_error` entry in the ledger when you give a real email but a wrong
-order ID, and the agent recovering once you give the correct one.
-
-**D. Voice (bonus) — ~1 min**
-Click the mic button, speak a refund request, and show the transcript
-appearing and being sent automatically. Toggle the speaker icon to have
-the reply read back.
-
-**E. Code walkthrough — ~3 min**
-Walk through `lib/refundAgent.js`: the tool schemas, the loop, and
-`evaluateEligibility()` as the deterministic policy engine. Explain why
-eligibility is computed in code, not decided by the model. Show
-`lib/logStore.js` and how every step gets logged with a `reasoning` field.
-
-**F. Architecture recap — ~1 min**
-Customer chat → `/api/refund` → agent loop → tools → mock CRM/policy →
-`logStore` → `/api/logs` polled by the dashboard. One sentence on how
-you'd swap the in-memory store for Redis/Postgres in production.
-
-## 4. Upgrading the voice bonus
-
-What's included (`app/page.js`) uses the browser's built-in
-`SpeechRecognition` / `SpeechSynthesis` APIs — zero extra services, works
-in Chrome/Edge today, and is enough to demonstrate live voice interaction
-in your video. For a production-grade version using what the assignment
-mentions:
-
-- **OpenAI Realtime API**: open a WebSocket/WebRTC session from the
-  browser, stream mic audio in, and have the model call the *same* tools
-  defined in `lib/refundAgent.js` directly (the Realtime API supports
-  function calling) — you'd reuse `evaluateEligibility()` and the tool
-  schemas as-is, just behind a different transport.
-- **LiveKit / ElevenLabs**: similar shape — LiveKit handles the audio
-  room/transport, ElevenLabs handles TTS, and your existing
-  `/api/refund` logic (or the Realtime tool-calling version of it) stays
-  the brain.
-
-## 5. Known simplifications (worth mentioning in your video)
-
-- Logs are in-memory, so they reset on server restart — fine for a demo,
-  not for production.
-- There's no real authentication; the "viewing as" picker simulates being
-  logged in as a given customer, which is enough for this assignment's
-  scope.
-- `gpt-4o-mini` is used by default for cost; change `OPENAI_AGENT_MODEL` in
-  `.env.local` to swap models without touching code.
+## 4. How this works
+Mention your order number and email and give your concern to the agent
+The agent analyses your concern based on the refund policy and mentions if you are eligible for the refund if so then in how many business days you refund will be generated
